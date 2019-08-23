@@ -3,11 +3,74 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace LAS_file
 {
     class LAS_reader
     {
+        //Работа с файлом
+        //public string filepath;
+        
+        public void LoadFile(string filepath)
+        {
+            List<string> strInfo = new List<string>();
+            List<string> strLogData = new List<string>();
+            string s;
+            bool writ = false;
+            bool wellStr = false;
+            bool valstr = false;
+
+            using (var f = new StreamReader(filepath, Encoding.GetEncoding(866)))
+            {
+                var dataF = f;
+                while ((s = f.ReadLine()) != "~Other Information")
+                //while ((s = f.ReadLine()) != "~ASCII Log Data")
+                {
+                    strInfo.Add(s);
+                    if (s.StartsWith("~W")) { wellStr = true; writ = false; }
+                    if (s.StartsWith("~C")) { writ = true; wellStr = false; }
+
+                    if (wellStr)
+                    {
+                        if (s.StartsWith("~")) continue; // строки заголовков пропускаем
+                        if (s.StartsWith("#")) continue; // закомментированные строки надо пропускать
+
+                        // что-нибудь делаем с прочитанной строкой s
+                        createWell(s);
+                    }
+
+                    if (writ)
+                    {
+                        if (s.StartsWith("~")) continue; // строки заголовков пропускаем
+                        if (s.StartsWith("#")) continue; // закомментированные строки надо пропускать
+
+                        // что-нибудь делаем с прочитанной строкой s
+                        createCurveInfo(s);
+                        //Console.WriteLine(s);
+
+                    }
+                }
+                while (!f.EndOfStream)
+                {
+                    s = f.ReadLine();
+                    if (s == "~ASCII Log Data") valstr = true;
+                    if (valstr)
+                    {
+                        if (s.StartsWith("~")) continue; // строки заголовков пропускаем
+                        if (s.StartsWith("#")) continue; // закомментированные строки надо пропускать
+
+                        // что-нибудь делаем с прочитанной строкой s
+                        readLogData(s);
+                        strLogData.Add(s);
+                        //Console.WriteLine(hd.dataValue_Count);
+                    }
+                } 
+            }
+        }
+        
+
+        //-------------------------------------------------
         public struct headWell
         {
             public string _name;

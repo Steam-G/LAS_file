@@ -15,79 +15,80 @@ namespace LAS_file
         static void Main(string[] args)
         {
             var hd = new LAS_reader();
-            string s;
-            bool writ = false;
-            bool wellStr = false;
-            bool valstr = false;
+            hd.LoadFile("gti.las");
+            //string s;
+            //bool writ = false;
+            //bool wellStr = false;
+            //bool valstr = false;
 
-            List<string> strInfo = new List<string>();
-            List<string> strLogData = new List<string>();
+            //List<string> strInfo = new List<string>();
+            //List<string> strLogData = new List<string>();
 
-            using (var f = new StreamReader("gti.las", Encoding.GetEncoding(866)))
-            {
-                var dataF = f;
-                while ((s = f.ReadLine()) != "~Other Information")
-                //while ((s = f.ReadLine()) != "~ASCII Log Data")
-                {
-                    strInfo.Add(s);
-                    if (s.StartsWith("~W")) { wellStr = true; writ = false; }
-                    if (s.StartsWith("~C")) { writ = true; wellStr = false; }
+            //using (var f = new StreamReader("gti.las", Encoding.GetEncoding(866)))
+            //{
+            //    var dataF = f;
+            //    while ((s = f.ReadLine()) != "~Other Information")
+            //    //while ((s = f.ReadLine()) != "~ASCII Log Data")
+            //    {
+            //        strInfo.Add(s);
+            //        if (s.StartsWith("~W")) { wellStr = true; writ = false; }
+            //        if (s.StartsWith("~C")) { writ = true; wellStr = false; }
 
-                    if (wellStr)
-                    {
-                        if (s.StartsWith("~")) continue; // строки заголовков пропускаем
-                        if (s.StartsWith("#")) continue; // закомментированные строки надо пропускать
+            //        if (wellStr)
+            //        {
+            //            if (s.StartsWith("~")) continue; // строки заголовков пропускаем
+            //            if (s.StartsWith("#")) continue; // закомментированные строки надо пропускать
 
-                        // что-нибудь делаем с прочитанной строкой s
-                        hd.createWell(s);
-                    }
+            //            // что-нибудь делаем с прочитанной строкой s
+            //            hd.createWell(s);
+            //        }
 
-                    if (writ)
-                    {
-                        if (s.StartsWith("~")) continue; // строки заголовков пропускаем
-                        if (s.StartsWith("#")) continue; // закомментированные строки надо пропускать
+            //        if (writ)
+            //        {
+            //            if (s.StartsWith("~")) continue; // строки заголовков пропускаем
+            //            if (s.StartsWith("#")) continue; // закомментированные строки надо пропускать
 
-                        // что-нибудь делаем с прочитанной строкой s
-                        hd.createCurveInfo(s);
-                        //Console.WriteLine(s);
+            //            // что-нибудь делаем с прочитанной строкой s
+            //            hd.createCurveInfo(s);
+            //            //Console.WriteLine(s);
 
-                    }
-
-
-                    // }
+            //        }
 
 
-                    //while (!dataF.EndOfStream)
-                    //{
-                    //    s = dataF.ReadLine();
-                    //    if (s == "~ASCII Log Data") valstr = true;
-                    //    if (valstr)
-                    //    {
-                    //        if (s.StartsWith("~")) continue; // строки заголовков пропускаем
-                    //        if (s.StartsWith("#")) continue; // закомментированные строки надо пропускать
+            //        // }
 
-                    //        // что-нибудь делаем с прочитанной строкой s
-                    //        hd.readLogData(s);
-                    //        Console.WriteLine(s);
-                    //    }
+
+            //        //while (!dataF.EndOfStream)
+            //        //{
+            //        //    s = dataF.ReadLine();
+            //        //    if (s == "~ASCII Log Data") valstr = true;
+            //        //    if (valstr)
+            //        //    {
+            //        //        if (s.StartsWith("~")) continue; // строки заголовков пропускаем
+            //        //        if (s.StartsWith("#")) continue; // закомментированные строки надо пропускать
+
+            //        //        // что-нибудь делаем с прочитанной строкой s
+            //        //        hd.readLogData(s);
+            //        //        Console.WriteLine(s);
+            //        //    }
                         
-                    //}
-                }
-                while (!f.EndOfStream)
-                {
-                    s = f.ReadLine();
-                    if (s == "~ASCII Log Data") valstr = true;
-                    if (valstr)
-                    {
-                        if (s.StartsWith("~")) continue; // строки заголовков пропускаем
-                        if (s.StartsWith("#")) continue; // закомментированные строки надо пропускать
+            //        //}
+            //    }
+            //    while (!f.EndOfStream)
+            //    {
+            //        s = f.ReadLine();
+            //        if (s == "~ASCII Log Data") valstr = true;
+            //        if (valstr)
+            //        {
+            //            if (s.StartsWith("~")) continue; // строки заголовков пропускаем
+            //            if (s.StartsWith("#")) continue; // закомментированные строки надо пропускать
 
-                        // что-нибудь делаем с прочитанной строкой s
-                        hd.readLogData(s);
-                        strLogData.Add(s);
-                        Console.WriteLine(hd.dataValue_Count);
-                    }
-                }
+            //            // что-нибудь делаем с прочитанной строкой s
+            //            hd.readLogData(s);
+            //            strLogData.Add(s);
+            //            Console.WriteLine(hd.dataValue_Count);
+            //        }
+            //    }
 
 
 
@@ -135,7 +136,7 @@ namespace LAS_file
                     
                 }
                 Console.ReadKey();
-            }
+            //}
 
         }
 
