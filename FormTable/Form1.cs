@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,8 +22,10 @@ namespace FormTable
         {
             InitializeComponent();
             //var hd = new LAS_reader();
+
             hd.LoadFile("gti.las");
-            dgvload();
+            paintChart();
+            //dgvload(); //заполнение таблицы. временно откл, работает
             //dataGridView1.DataSource = GetDataTable(hd.dataValue, hd.dataValue_Count);
             
         }
@@ -60,6 +63,19 @@ namespace FormTable
 
             bindingSource.DataSource = table;
             dataGridView1.DataSource = bindingSource;
+        }
+
+        private void paintChart()
+        {
+            int length2 = hd.dataValue.Length;
+            for (int i = 0; i < length2; i++)
+            {
+                chart1.Series[0].Points.AddXY(double.Parse(hd.dataValue[i]._dataValue[3], CultureInfo.InvariantCulture), i ); // 
+            }
+            //chart1.Series[0].Points.AddXY(0, 5);
+            //chart1.Series[0].Points.AddXY(1, 7);
+            //chart1.Series[0].Points.AddXY(2, 2);
+            //chart1.Series[0].Points.AddXY(3, 6);
         }
 
         private void addRowinTable()
