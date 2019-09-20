@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LAS_file;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -71,6 +72,8 @@ namespace FormTable
             for (int i = 0; i < length2; i++)
             {
                 chart1.Series[0].Points.AddXY(double.Parse(hd.dataValue[i]._dataValue[3], CultureInfo.InvariantCulture), i ); // 
+                chart1.Series[1].Points.AddXY(double.Parse(hd.dataValue[i]._dataValue[2], CultureInfo.InvariantCulture), i); //
+                chart1.Series[2].Points.AddXY(double.Parse(hd.dataValue[i]._dataValue[4], CultureInfo.InvariantCulture), i); //
             }
             //chart1.Series[0].Points.AddXY(0, 5);
             //chart1.Series[0].Points.AddXY(1, 7);

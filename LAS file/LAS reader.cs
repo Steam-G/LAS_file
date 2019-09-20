@@ -7,7 +7,7 @@ using System.IO;
 
 namespace LAS_file
 {
-    class LAS_reader
+    public class LAS_reader
     {
         //Работа с файлом
         //public string filepath;
