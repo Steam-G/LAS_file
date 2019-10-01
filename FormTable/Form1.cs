@@ -26,7 +26,7 @@ namespace FormTable
 
             hd.LoadFile("gti.las");
             paintChart();
-            //dgvload(); //заполнение таблицы. временно откл, работает
+            dgvload(); //заполнение таблицы. временно откл, работает
             //dataGridView1.DataSource = GetDataTable(hd.dataValue, hd.dataValue_Count);
             
         }
@@ -35,6 +35,7 @@ namespace FormTable
         private BindingSource bindingSource = new BindingSource();
 
 
+        //работа с таблицей
         private void dgvload()
         {
             table = new DataTable();
@@ -55,16 +56,47 @@ namespace FormTable
             int length2 = hd.dataValue.Length;
             //for (int i = 0; i < length1; i++)
             //    table.Columns.Add();
+
+            // заполняем таблицу
             for (int i = 0; i < length2; i++)
             {
                 table.Rows.Add(table.NewRow());
                 for (int j = 0; j < length1; j++)
-                    table.Rows[i][j+1] = hd.dataValue[i]._dataValue[j];
+                {
+                    if (j == 1)
+                    {
+                        //перевожу Unix Timestamp в представление типа DateTime
+                        DateTime dateTime = ConvertFromUnixTimestamp(double.Parse(hd.dataValue[i]._dataValue[j], CultureInfo.InvariantCulture));
+                        //теперь привожу полученную переменную даты и времени в текст, вида "дд.мм.гггг чч:мм:сс"
+                        string sDT = dateTime.ToString("G", CultureInfo.CreateSpecificCulture("de-DE"));
+                        //кладу полученное значение в таблицу
+                        table.Rows[i][j + 1] = sDT;
+                        continue;
+                    }
+                    table.Rows[i][j + 1] = (string)hd.dataValue[i]._dataValue[j];
+                }
             }
 
             bindingSource.DataSource = table;
             dataGridView1.DataSource = bindingSource;
         }
+
+        //Конвертирование Unix Timestamp в DateTime
+        static DateTime ConvertFromUnixTimestamp(double timestamp)
+        {
+            DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            return origin.AddSeconds(timestamp);
+        }
+
+        //Обратное конвертирование DateTime в Unix Timestamp
+        static double ConvertToUnixTimestamp(DateTime date)
+        {
+            DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            TimeSpan diff = date - origin;
+            return Math.Floor(diff.TotalSeconds);
+        }
+
+
 
         private void paintChart()
         {
