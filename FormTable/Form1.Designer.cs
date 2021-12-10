@@ -80,6 +80,7 @@
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.Size = new System.Drawing.Size(763, 369);
             this.dataGridView1.TabIndex = 0;
+            this.dataGridView1.VirtualMode = true;
             // 
             // tabPage2
             // 

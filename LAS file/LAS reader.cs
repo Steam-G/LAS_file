@@ -12,26 +12,28 @@ namespace LAS_file
         //Работа с файлом
         //public string filepath;
         
+        
         public void LoadFile(string filepath)
         {
             List<string> strInfo = new List<string>();
             List<string> strLogData = new List<string>();
+            
             string s;
-            bool writ = false;
-            bool wellStr = false;
-            bool valstr = false;
+            int nRazdel = 0;
 
             using (var f = new StreamReader(filepath, Encoding.GetEncoding(866)))
             {
                 var dataF = f;
-                while ((s = f.ReadLine()) != "~Other Information")
-                //while ((s = f.ReadLine()) != "~ASCII Log Data")
-                {
-                    strInfo.Add(s);
-                    if (s.StartsWith("~W")) { wellStr = true; writ = false; }
-                    if (s.StartsWith("~C")) { writ = true; wellStr = false; }
 
-                    if (wellStr)
+                s = f.ReadLine();
+                while (!f.EndOfStream)
+                {
+                    // определим текущий раздел данных
+                    if (getNRazdel(s) < 255) nRazdel = getNRazdel(s);
+                    
+                    //if (s == "~ASCII Log Data") valstr = true;
+                    s = f.ReadLine();
+                    if (nRazdel == 1)
                     {
                         if (s.StartsWith("~")) continue; // строки заголовков пропускаем
                         if (s.StartsWith("#")) continue; // закомментированные строки надо пропускать
@@ -40,33 +42,35 @@ namespace LAS_file
                         createWell(s);
                     }
 
-                    if (writ)
+                    if (nRazdel == 2)
                     {
                         if (s.StartsWith("~")) continue; // строки заголовков пропускаем
                         if (s.StartsWith("#")) continue; // закомментированные строки надо пропускать
 
                         // что-нибудь делаем с прочитанной строкой s
                         createCurveInfo(s);
-                        //Console.WriteLine(s);
-
                     }
-                }
-                while (!f.EndOfStream)
-                {
-                    s = f.ReadLine();
-                    if (s == "~ASCII Log Data") valstr = true;
-                    if (valstr)
+                    if (nRazdel == 4)
                     {
                         if (s.StartsWith("~")) continue; // строки заголовков пропускаем
                         if (s.StartsWith("#")) continue; // закомментированные строки надо пропускать
 
                         // что-нибудь делаем с прочитанной строкой s
                         readLogData(s);
-                        strLogData.Add(s);
-                        //Console.WriteLine(hd.dataValue_Count);
+                        //strLogData.Add(s);
                     }
                 } 
             }
+        }
+
+        private int getNRazdel(string s)
+        {
+            //List<string> lasLabelRazdel = new List<string>() { "~W", "~C", "~O", "~A" };
+            if (s.StartsWith("~W")) return 1;
+            if (s.StartsWith("~C")) return 2;
+            if (s.StartsWith("~O")) return 3;
+            if (s.StartsWith("~A")) return 4;
+            return 255;
         }
         
 
