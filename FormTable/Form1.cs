@@ -6,6 +6,7 @@ using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -77,6 +78,7 @@ namespace FormTable
                 }
             }
 
+            ExtensionMethods.DoubleBuffered(dataGridView1, true);
             bindingSource.DataSource = table;
             dataGridView1.DataSource = bindingSource;
         }
@@ -138,6 +140,21 @@ namespace FormTable
                     table.Rows[i][j] = array[i]._dataValue[j];
             }
             return table;
+        }
+    }
+
+    public static class ExtensionMethods
+    {
+        /// <summary>
+        /// Метод позволяет применить к компоненту DataGridView двойную буфферизацию. Это ускоряет отображение больших объемов данных.
+        /// </summary>
+        /// <param name="dgv">Необходимый DataGridView</param>
+        /// <param name="setting">True или False</param>
+        public static void DoubleBuffered(this DataGridView dgv, bool setting)
+        {
+            Type dgvType = dgv.GetType();
+            PropertyInfo pi = dgvType.GetProperty("DoubleBuffered", BindingFlags.Instance | BindingFlags.NonPublic);
+            pi.SetValue(dgv, setting, null);
         }
     }
 }
